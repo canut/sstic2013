@@ -1,0 +1,232 @@
+﻿A = 0x0
+R0 = A
+A = 0x10
+A = [A]
+R7 = A
+A = R0
+A = ~A
+R6 = A
+A = 0xe
+R5 = A
+A = 0x71
+R4 = A
+A = 0x0
+jz R4
+A = 0x1
+R6 = A
+A = 0x16
+R5 = A
+A = 0x71
+R4 = A
+A = 0x0
+jz R4
+A = 0x52
+R6 = A
+A = R7
+jz R6
+A = 0x11
+R7 = A
+A = R0
+R6 = A
+A = 0x24
+R5 = A
+A = 0x71
+R4 = A
+A = 0x0
+jz R4
+A = R7
+R1 = A
+A = R1
+A = [A]
+R6 = A
+A = 0xf
+A = A & R0
+A = [A]
+A = A | R6
+R6 = A
+A = R1
+A = [A]
+R7 = A
+A = 0xf
+A = A & R0
+A = [A]
+A = A & R7
+R7 = A
+A = R7
+A = ~A
+A = A & R6
+R7 = A
+A = 0x40
+R6 = A
+A = 0x53
+R5 = A
+A = 0x0
+jz R5
+A = R7
+[R1] = A
+A = 0x1
+R6 = A
+A = R0
+R7 = A
+A = 0x4c
+R5 = A
+A = 0x71
+R4 = A
+A = 0x0
+jz R4
+A = R7
+R0 = A
+A = 0x2
+R6 = A
+A = 0x0
+jz R6
+finished (return)
+A = 0x1
+R5 = A
+A = 0x0
+R4 = A
+A = 0x6d
+R3 = A
+A = R5
+jz R3
+A = 0x66
+R3 = A
+A = R4
+A = A << 1
+R4 = A
+A = R5
+A = A & R7
+jz R3
+A = 0x1
+A = A | R4
+R4 = A
+A = R5
+A = A << 1
+R5 = A
+A = 0x57
+R3 = A
+A = 0x0
+jz R3
+A = R4
+R7 = A
+A = 0x0
+jz R6
+A = 0x0
+R1 = A
+R3 = A
+A = 0x1
+R2 = A
+A = 0x63
+A = 0x80 | A
+R4 = A
+A = R2
+jz R4
+A = 0x2c
+A = 0x80 | A
+R4 = A
+A = R7
+A = A & R2
+jz R4
+A = 0x16
+A = 0x80 | A
+R4 = A
+A = R6
+A = A & R2
+jz R4
+A = 0xf
+A = 0x80 | A
+R4 = A
+A = R1
+jz R4
+A = R3
+A = A | R2
+R3 = A
+A = R2
+R1 = A
+A = 0x59
+A = 0x80 | A
+R4 = A
+A = 0x0
+jz R4
+A = 0x22
+A = 0x80 | A
+R4 = A
+A = R1
+jz R4
+A = R2
+R1 = A
+A = 0x59
+A = 0x80 | A
+R4 = A
+A = 0x0
+jz R4
+A = R3
+A = A | R2
+R3 = A
+A = 0x0
+R1 = A
+A = 0x59
+A = 0x80 | A
+R4 = A
+A = 0x0
+jz R4
+A = 0x48
+A = 0x80 | A
+R4 = A
+A = R6
+A = A & R2
+jz R4
+A = 0x3e
+A = 0x80 | A
+R4 = A
+A = R1
+jz R4
+A = R2
+R1 = A
+A = 0x59
+A = 0x80 | A
+R4 = A
+A = 0x0
+jz R4
+A = R2
+A = A | R3
+R3 = A
+A = 0x0
+R1 = A
+A = 0x59
+A = 0x80 | A
+R4 = A
+A = 0x0
+jz R4
+A = 0x57
+A = 0x80 | A
+R4 = A
+A = R1
+jz R4
+A = R2
+A = A | R3
+R3 = A
+A = 0x0
+R1 = A
+A = 0x59
+A = 0x80 | A
+R4 = A
+A = 0x0
+jz R4
+A = 0x0
+R1 = A
+A = R2
+A = A << 1
+R2 = A
+A = R1
+A = A << 1
+R1 = A
+A = 0x76
+R4 = A
+A = 0x0
+jz R4
+A = R3
+R7 = A
+A = 0x0
+jz R5
+

@@ -1,0 +1,57 @@
+﻿0 0 0 0 2 2 16 4 sub
+{ 6 index
+  exch
+  4 getinterval % lecture de 4 octets de la clé avec un décalage de 2 octets à chaque boucle: k2k3k4k5 puis k4k5k6k7 puis k6k7k8k9, etc... %
+  10240         % repetition de 10240 fois %
+  { 0 0 1 3 { 3 -1 roll dup 4 1 roll exch get exch 8 bitshift add } for % conversion des 4 octets lus en entier : K%
+  exch pop dup -2 bitshift exch dup -3 bitshift 1 index -7 bitshift xor exch dup 4 1 roll xor xor 1 and % (K ^ K >> 2 ^ K >> 3 ^ K >> 7) & 0x01 = bit%
+  31 bitshift
+  exch -1 bitshift or   % bit| (K >> 1) = dK%
+  % comparaison de la clé dérivée dK aux valeurs 0x55555555 et 0xaaaaaaaa %
+  % dK < 0x55555555                 => 1
+  % 0x55555555 < dK < 0xaaaaaaaa    => -1
+  % 0xaaaaaaaa < dK                 => 0
+  % un offset compris entre -1, 0 ou 1 est retourné %
+  4 string exch 3 -1 0 {3 copy exch 255 and put pop -8 bitshift} for pop dup <55555555> le {1} { dup <aaaaaaaa> le {-1} {0} ifelse } ifelse
+  
+  4 -1 roll add 5 index length      % récupération du nombre d'éléménts de I1 : 77 %
+  add 5 index length mod            % l'offset est ajouté à la position en cours modulo 77 : déplacement vertical dans le tableau I1 %
+  3 1 roll 
+  0 0 1 3 { 3 -1 roll dup 4 1 roll exch get exch 8 bitshift add } for % conversion de dK en entier %
+  exch pop dup -2 bitshift exch dup -3 bitshift 1 index -7 bitshift xor exch dup 4 1 roll xor xor 1 and % dérivation identique à la précédente mais appliquée sur dK %
+  31 bitshift
+  exch -1 bitshift or   % obtention de ddK = bit| (dK >> 1) %
+  4 string exch 3 -1 0 {3 copy exch 255 and put pop -8 bitshift} for pop dup <55555555> le {1} { dup <aaaaaaaa> le {-1} {0} ifelse } ifelse % nouvel offset calculé comme précédemment %
+
+  3 -1 roll add 5 index 0 get length 4 idiv add 5 index 0 get length 4 idiv mod % l'offset est ajouté à la position en cours modulo 32 : déplacement horizontal dans la chaine de 128 octets %
+  % a partir des 2 offsets, une nouvelle position a été calculée : il s'agit d'une case contigüe à la case d'origine modulo les tailles du tableau I1 %
+  
+  
+  % nouveau bloc de dérivation appliqué sur ddK %
+  exch
+  0 0 1 3 { 3 -1 roll dup 4 1 roll exch get exch 8 bitshift add } for
+  exch pop dup -2 bitshift exch dup -3 bitshift 1 index -7 bitshift xor exch dup 4 1 roll xor xor 1 and
+  31 bitshift
+  exch -1 bitshift or   % obtention de dddK = bit| (ddK >> 1) %
+
+  4 string exch 3 -1 0 {3 copy exch 255 and put pop -8 bitshift} for pop 6 -2 roll 2 copy 8 2 roll get 4 index 4 mul 7 index 5 index get 4 index 4 mul 4 5 copy dup 4 1 roll getinterval 4 1 roll getinterval exch dup length string 0 3 -1 roll { 3 copy put pop 1 add } forall pop exch 3 -1 roll pop 4 -2 roll 3 -1 roll putinterval putinterval 5 index 5 index get 4 index 4 mul 4 getinterval 1 index 0 0 1 1 {pop 2 index length} for exch 1 sub { 3 copy exch length getinterval 2 index mark 3 1 roll 0 1 3 -1 roll dup length 1 sub exch 4 1 roll
+  % les 4 octets de la position originale ont été permutés avec les 4 octets de la nouvelle position %
+  
+  
+  { dup 3 2 roll dup 5 1 roll exch get 3 1 roll exch dup 5 1 roll exch get xor 3 1 roll } for % xor de la case d'origine avec la clé dérivée dddK %
+
+  pop pop ] dup length string 0 3 -1 roll { 3 -1 roll dup 4 1 roll exch 2 index exch put 1 add } forall pop 4 -1 roll dup 5 1 roll 3 1 roll dup 4 1 roll putinterval % ecriture du résultat du xor dans la case d'origine %
+
+  exch pop } for pop pop 5 1 roll 2 copy 7 -3 roll pop pop } % remise en état de la pile %
+  repeat            % répétition 10240 fois des opérations de dérivation de clés, calculs d'offset et permutation-xorée de cases %
+  pop 4 index 0 1 index { length add } forall string 0 3 2 roll { 3 copy putinterval length add } forall % conversion du tableau I1 en chaine de caractères %
+  pop
+  calc                          % calcul empreinte md5 de I1 transformé %
+  I3 16 string readstring       % lecture de 16 octets dans I3 %
+  pop
+  ne                            % comparaison du md5 lu et du md5 calculé %
+  {0 1 1073741823 {pop} for     % boucle inutile anti-bruteforce ? %
+  (Key is invalid. Exiting ...\n) error flush quit } if } for
+pop pop pop pop
+(output.bin) (w) file exch 1 index resetfile {1 index exch writestring} forall closefile    % si tous les md5 correspondent, le résultat obtenu suite aux transformations successives de I1 est écrit dans le fichier de sortie output.bin %
+%%%
